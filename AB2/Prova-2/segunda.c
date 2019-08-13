@@ -77,7 +77,7 @@ void loop(int n, int m, int terreno[][m], char comando[50], int morangos, int ml
                 linha[i] = -1;
             }
             lerArray(0, n, linha);
-            for(i = 0; linha[i] != -1; i++){
+            for(i = 0; i < n && linha[i] != -1; i++){
                 plantar(n, m, terreno, linha[i], &ml);
             }
             loop(n, m, terreno, comando, morangos, ml);
