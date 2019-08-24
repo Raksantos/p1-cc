@@ -47,16 +47,22 @@ int posicaoComecar(int i, int arrayAux[], int n)
   }
 }
 
-int contaTocas(int i, int j, int x, int array[], int arrayAux[], int n, int numTocas, int tamanhoFamilia[])
+int contaTocas(int i, int aux, int aux2, int j, int x, int array[], int arrayAux[], int n, int numTocas, int tamanhoFamilia[],
+              struct dados pessoas[], struct dados ordemCerta[], int vetorAux[])
 {
   if(i < n){
     if(arrayAux[i] == 0){
       arrayAux[i] = 1;
-      return contaTocas(array[i], j, x + 1, array, arrayAux, n, numTocas, tamanhoFamilia);
+      strcpy(ordemCerta[aux2].nome, pessoas[i].nome);
+      ordemCerta[aux2].idade = pessoas[i].idade;
+      ordemCerta[aux2].sexo = pessoas[i].sexo;
+      ordemCerta[aux2].parentesco = numTocas;
+      vetorAux[aux2] = i;
+      return contaTocas(array[i], aux, aux2 + 1, j, x + 1, array, arrayAux, n, numTocas, tamanhoFamilia, pessoas, ordemCerta, vetorAux);
     }
     else{
       tamanhoFamilia[j] = x;
-      return contaTocas(posicaoComecar(i, arrayAux, n), j + 1, 0, array, arrayAux, n, numTocas + 1, tamanhoFamilia);
+      return contaTocas(posicaoComecar(i, arrayAux, n), aux, aux2, j + 1, 0, array, arrayAux, n, numTocas + 1, tamanhoFamilia, pessoas, ordemCerta, vetorAux);
     }
   }
   else{
@@ -68,8 +74,8 @@ int main()
 {
     int n, i, x, aux = 0, j = 0, qtdFamilia=0;
     scanf("%d", &n);
-    struct dados pessoas[n];
-    int familias[n], parentesco[n], tamanhoFamilia[n];
+    struct dados pessoas[n], ordemCerta[n];
+    int familias[n], parentesco[n], tamanhoFamilia[n], vetorAux[n];
     for(i = 0; i < n; i++){
         scanf("%s", pessoas[i].nome);
         scanf("%d", &pessoas[i].idade);
@@ -81,14 +87,35 @@ int main()
     }
     iniciaFamilia(0, familias, n);
     iniciaAux(0, tamanhoFamilia, n);
-    qtdFamilia = contaTocas(0, 0, 0, parentesco, familias, n, qtdFamilia, tamanhoFamilia);
+    qtdFamilia = contaTocas(0, 0, 0, 0, 0, parentesco, familias, n, qtdFamilia, tamanhoFamilia,
+                  pessoas, ordemCerta, vetorAux);
+    
+    // for (i = 0; i < n; i++)
+    // {
+    //   printf("Nome: %s\n", ordemCerta[i].nome);
+    //   printf("Idade: %d\n", ordemCerta[i].idade);
+    //   printf("Sexo: %d\n", ordemCerta[i].sexo);
+    //   printf("Parentesco: %d\n", ordemCerta[i].parentesco);
+    // }
+    
     printf("Quantidade de Familias: %d\n\n", qtdFamilia);
     for(i = 0; i < qtdFamilia; i++){
-         int maisVelho, maisVelhoSexo;
-         char maisVelhoNome[50];
-         printf("Familia: %d\n", i + 1);
-         printf("Tamanho da Familia: %d\n", tamanhoFamilia[i]);
-         for(x = 0; x < tamanhoFamilia[i]; x++){
+         printf("Familia #%d: %d Pessoas\n\n", i + 1, tamanhoFamilia[i]);
+         for (x = 0; x < tamanhoFamilia[i]; x++)
+         {
+           printf("Nome: %s\n", ordemCerta[aux].nome);
+           printf("Idade: %d\n", ordemCerta[aux].idade);
+           if (ordemCerta[aux].sexo == 1)
+           {
+             printf("Sexo: Masculino\n\n");
+           }
+           else{
+             printf("Sexo: Feminino\n\n");
+           }
+           aux++;
+         }
+         printf("####################\n\n");
+         /*for(x = 0; x < tamanhoFamilia[i]; x++){
              if(x == 0){
                  strcpy(maisVelhoNome, pessoas[aux].nome);
                  maisVelho = pessoas[aux].idade;
@@ -115,10 +142,7 @@ int main()
                  }
              }
              aux++;
-         }
-         printf("Integrante mais velho: %s\n", maisVelhoNome);
-         printf("Idade do integrante mais velho: %d\n", maisVelho);
-         printf("\n");
+         }*/
     }
     return 0;
 }
